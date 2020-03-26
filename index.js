@@ -2,7 +2,7 @@ const LCD = require('raspberrypi-i2c-lcd');
 
 class SimpleLCD {
   constructor(bus, address, width, height) {
-    this.lcd = new LCD(bus, address, width, height);
+    this._lcd = new LCD(bus, address, width, height);
     this._height = height;
     this._width = width;
     this._lines = [];
@@ -11,7 +11,7 @@ class SimpleLCD {
       this._lines.push('');
       this._lastLines.push('');
     }
-    this.lcd.clearAsync(() => {
+    this._lcd.clearAsync(() => {
       this._displayMessage();
     });
   }
@@ -71,7 +71,7 @@ class SimpleLCD {
 
   _printLine(line, message) {
     return new Promise((res, rej) => {
-      this.lcd.printlnAsync(message, line, (err) => {
+      this._lcd.printlnAsync(message, line, (err) => {
         if (err) {
           rej(err);
         } else {
@@ -84,7 +84,7 @@ class SimpleLCD {
   _displayMessage() {
     if (this._checkNewLines()) {
       this._updateLastLines();
-      this.lcd.clearAsync(async () => {
+      this._lcd.clearAsync(async () => {
         for (let i = 0; i < this._lines.length; i += 1) {
           await this._printLine(i, this._lines[i]);
         }
