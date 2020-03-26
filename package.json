@@ -1,0 +1,20 @@
+{
+  "name": "raspberrypi-simple-i2c-lcd",
+  "version": "1.0.0",
+  "description": "Simple control of i2c lcd on Raspberry Pi",
+  "main": "index.js",
+  "dependencies": {
+    "raspberrypi-i2c-lcd": "^1.0.0",
+    "raspberrypi-rotary-encoder": "^1.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kevincastejon",
+  "license": "ISC"
+}
