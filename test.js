@@ -1,6 +1,6 @@
 const SimpleLCD = require('./index');
 
-const menu = new SimpleLCD(1, 0x3f, 16, 2);
+const lcd = new SimpleLCD(1, 0x3f, 16, 2);
 let i = 0;
 const messages = [
   ['AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', '1111111111111111111111111111111111111'],
@@ -9,6 +9,6 @@ const messages = [
   ['DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD', '4444444444444444444444444444444444444'],
 ];
 setInterval(() => {
-  menu.lines = messages[i];
+  lcd.lines = messages[i];
   i = i + 1 > messages.length - 1 ? 0 : i + 1;
 }, 20);

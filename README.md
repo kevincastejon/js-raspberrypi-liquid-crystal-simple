@@ -13,16 +13,16 @@ Be sure to use the right address depending on your i2c lcd device, here is an ex
 const SimpleLCD = require('raspberrypi-simple-i2c-lcd');
 
 // Init a 1602 lcd on 0x3f i2c address on i2c bus 1
-const menu = new SimpleLCD(1, 0x3f, 16, 2);
+const lcd = new SimpleLCD(1, 0x3f, 16, 2);
 
 // then
 
-menu.lines = ['Hello', 'World'];
+lcd.lines = ['Hello', 'World'];
 
 // or
 
-menu.setLine(0, 'Hello');
-menu.setLine(1, 'World');
+lcd.setLine(0, 'Hello');
+lcd.setLine(1, 'World');
 ```
 ## API
 - Properties
