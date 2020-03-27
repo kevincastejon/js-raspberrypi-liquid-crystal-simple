@@ -1,6 +1,6 @@
 {
   "name": "raspberrypi-simple-i2c-lcd",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Simple control of i2c lcd on Raspberry Pi",
   "main": "index.js",
   "dependencies": {
