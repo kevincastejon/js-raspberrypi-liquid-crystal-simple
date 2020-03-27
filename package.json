@@ -4,7 +4,7 @@
   "description": "Simple control of i2c lcd on Raspberry Pi",
   "main": "index.js",
   "dependencies": {
-    "raspberrypi-i2c-lcd": "^1.0.0",
+    "raspberrypi-i2c-lcd": "^1.2.0",
     "raspberrypi-rotary-encoder": "^1.6.0"
   },
   "devDependencies": {
