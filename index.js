@@ -105,7 +105,8 @@ class LCD extends Emitter {
       if (newLines.length - 1 < i) {
         break;
       } else {
-        this._lines[i] = newLines[i].substr(0, this._width);
+        const str = String(newLines[i]);
+        this._lines[i] = str.substr(0, this._width);
       }
     }
   }
