@@ -1,11 +1,10 @@
 {
-  "name": "raspberrypi-simple-i2c-lcd",
+  "name": "raspberrypi-liquid-crystal-simple",
   "version": "1.2.0",
-  "description": "Simple control of i2c lcd on Raspberry Pi",
+  "description": "Easy control of i2c lcd on raspberrypi using raspberrypi-liquid-crystal",
   "main": "index.js",
   "dependencies": {
-    "raspberrypi-i2c-lcd": "^1.2.0",
-    "raspberrypi-rotary-encoder": "^1.6.0"
+    "raspberrypi-liquid-crystal": "^1.13.0"
   },
   "devDependencies": {
     "eslint": "^6.8.0",

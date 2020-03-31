@@ -1,35 +1,111 @@
-const LCD = require('raspberrypi-i2c-lcd');
+const _LCD = require('raspberrypi-liquid-crystal');
+const Emitter = require('events');
 
-class SimpleLCD {
+class LCD extends Emitter {
   constructor(bus, address, width, height) {
-    this._lcd = new LCD(bus, address, width, height);
+    super();
+    this._lcd = new _LCD(bus, address, width, height);
     this._height = height;
     this._width = width;
     this._lines = [];
     this._lastLines = [];
-    for (let i = 0; i < height.length; i += 1) {
+    this._lastBlinking = false;
+    this._lastCursor = false;
+    this._lastDisplay = true;
+    this._blinking = false;
+    this._display = true;
+    this._cursor = false;
+    for (let i = 0; i < height; i += 1) {
       this._lines.push('');
       this._lastLines.push('');
     }
-    this._lcd.clearAsync(() => {
-      this._displayMessage();
-    });
+  }
+
+  initSync() {
+    try {
+      this._lcd.beginSync();
+      this._lcd.clearSync();
+    } catch (e) {
+      this.emit('error', e);
+      return;
+    }
+    this.emit('ready');
+    this._displayMessage();
+  }
+
+  async init() {
+    try {
+      await this._lcd.begin();
+      await this._lcd.clear();
+    } catch (e) {
+      this.emit('error', e);
+      return;
+    }
+    this.emit('ready');
+    this._displayMessage();
+  }
+
+  get busNumber() {
+    return this._lcd._busNumber;
+  }
+
+  get address() {
+    return this._lcd._address;
+  }
+
+  get cols() {
+    return this._lcd._cols;
+  }
+
+  get rows() {
+    return this._lcd._rows;
+  }
+
+  get ready() {
+    return this._lcd._began;
   }
 
   get height() {
-    return (this._height);
+    return (this._lcd._height);
   }
 
   get width() {
-    return (this._width);
+    return (this._lcd._width);
   }
 
-  set lines(value) {
+  get blink() {
+    return this._blinking;
+  }
+
+  set blink(value) {
+    const bool = Boolean(value);
+    this._blinking = bool;
+  }
+
+  get cursor() {
+    return this._cursor;
+  }
+
+  set cursor(value) {
+    const bool = Boolean(value);
+    this._cursor = bool;
+  }
+
+  get display() {
+    return this._display;
+  }
+
+  set display(value) {
+    const bool = Boolean(value);
+    this._display = bool;
+  }
+
+  set lines(newLines) {
     for (let i = 0; i < this._lines.length; i += 1) {
-      if (value.length - 1 < i) {
+      if (newLines.length - 1 < i) {
         break;
       } else {
-        this._lines[i] = value[i].substr(0, this._width);
+        this._lines[i] = newLines[i].substr(0, this._width);
       }
     }
   }
@@ -38,11 +114,17 @@ class SimpleLCD {
     return (this._lines.concat());
   }
 
+  clear() {
+    for (let i = 0; i < this._lines.length; i += 1) {
+      this._lines[i] = '';
+    }
+  }
+
   setLine(line, message) {
     if (line < 0 || line > this._height - 1) {
       throw new Error('line index is out of bounds');
     } else {
-      this._lines[line] = message.substr(0, this._width);
+      this._lines[line] = message.length > this._width ? message.substr(0, this._width) : message.concat([].fill('', 0, this._width - message.length).join(''));
     }
   }
 
@@ -63,36 +145,73 @@ class SimpleLCD {
     return false;
   }
 
+  _checkBlinkChange() {
+    return this._lastBlinking !== this._blinking;
+  }
+
+  _checkCursorChange() {
+    return this._lastCursor !== this._cursor;
+  }
+
+  _checkDisplayChange() {
+    return this._lastDisplay !== this._display;
+  }
+
+  _updateBlinking() {
+    this._lastBlinking = this._blinking;
+  }
+
+  _updateCursor() {
+    this._lastCursor = this._cursor;
+  }
+
+  _updateDisplay() {
+    this._lastDisplay = this._display;
+  }
+
   _updateLastLines() {
     for (let i = 0; i < this._lines.length; i += 1) {
       this._lastLines[i] = this._lines[i];
     }
   }
 
-  _printLine(line, message) {
-    return new Promise((res, rej) => {
-      this._lcd.printlnAsync(message, line, (err) => {
-        if (err) {
-          rej(err);
+  async _displayMessage() {
+    try {
+      if (this._checkDisplayChange()) {
+        if (this._display) {
+          await this._lcd.display();
         } else {
-          res();
+          await this._lcd.noDisplay();
         }
-      });
-    });
-  }
-
-  _displayMessage() {
-    if (this._checkNewLines()) {
-      this._updateLastLines();
-      this._lcd.clearAsync(async () => {
+        this._updateDisplay();
+      }
+      if (this._checkBlinkChange()) {
+        if (this._blinking) {
+          await this._lcd.blink();
+        } else {
+          await this._lcd.noBlink();
+        }
+        this._updateBlinking();
+      }
+      if (this._checkCursorChange()) {
+        if (this._cursor) {
+          await this._lcd.cursor();
+        } else {
+          await this._lcd.noCursor();
+        }
+        this._updateCursor();
+      }
+      if (this._checkNewLines()) {
         for (let i = 0; i < this._lines.length; i += 1) {
-          await this._printLine(i, this._lines[i]);
+          await this._lcd.printLine(i, this._lines[i]);
         }
-        this._displayMessage();
-      });
-    } else {
-      setTimeout(() => this._displayMessage(), 16);
+        this._updateLastLines();
+      }
+    } catch (e) {
+      this.emit('error', e);
+      return;
     }
+    setTimeout(() => this._displayMessage(), 16);
   }
 }
-module.exports = SimpleLCD;
+module.exports = LCD;
