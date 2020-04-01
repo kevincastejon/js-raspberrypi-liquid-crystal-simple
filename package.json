@@ -1,6 +1,6 @@
 {
   "name": "raspberrypi-liquid-crystal-simple",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "description": "Easy control of i2c lcd on raspberrypi using raspberrypi-liquid-crystal",
   "main": "index.js",
   "dependencies": {
