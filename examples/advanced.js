@@ -6,7 +6,7 @@ function wait(delay) {
   }));
 }
 
-const lcd = new LCD(1, 0x3f, 16, 2);
+const lcd = new LCD(1, 0x3f, 16, 2, [[0x0, 0x0, 0xa, 0x1f, 0x1f, 0xe, 0x4, 0x0]]);
 lcd.on('error', (error) => console.log(error));
 lcd.on('ready', async () => {
   lcd.lines = ['hello', 'world'];
@@ -28,5 +28,7 @@ lcd.on('ready', async () => {
   lcd.display = false;
   await wait(1000);
   lcd.display = true;
+  await wait(1000);
+  lcd.setLine(1, `world!!!${LCD.getChar(0)}`);
 });
 lcd.init();

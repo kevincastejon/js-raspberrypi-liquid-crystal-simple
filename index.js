@@ -144,6 +144,10 @@ class LCD extends Emitter {
     }
   }
 
+  static getChar(charId) {
+    return _LCD.getChar(charId);
+  }
+
   _checkNewLines() {
     for (let i = 0; i < this._lines.length; i += 1) {
       if (this._lines[i] !== this._lastLines[i]) {
