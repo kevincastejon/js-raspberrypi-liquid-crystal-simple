@@ -122,18 +122,18 @@ class LCD extends Emitter {
 
   setLine(line, message) {
     if (line < 0 || line > this._rows - 1) {
-      throw new Error('line index is out of bounds');
+      this.emit('error', new Error('line index is out of bounds'));
     } else {
-      this._lines[line] = message.length > this._cols ? message.substr(0, this._cols) : message.concat([].fill('', 0, this._cols - message.length).join(''));
+      this._lines[line] = message.length > this._cols ? message.substr(0, this._cols) : message.concat(Array(this._cols - message.length - 1).fill(' ').join(''));
     }
   }
 
   getLine(line) {
     if (line < 0 || line > this._rows - 1) {
-      throw new Error('line index is out of bounds');
-    } else {
-      return (this._lines[line]);
+      this.emit('error', new Error('line index is out of bounds'));
+      return null;
     }
+    return (this._lines[line]);
   }
 
   static getChar(charId) {
