@@ -1,12 +1,12 @@
 # raspberrypi-liquid-crystal-simple
  Simple control of i2c lcd on Raspberry Pi
 
-# Overview
+## Overview
 This module encapsulates the raspberrypi-liquid-crystal module to make its use easier.
 Your screen content is represented by an array of string corresponding to each line, and settings such as cursor, blink, etc... are boolean properties.
 You can change them at any moment and the screen will display the changes as soon as possible without overlapping the commands.
 
-# Install
+## Install
 Be sure to have enabled I2C on your raspberry, if not use ```sudo raspi-config``` interface to do it
 ```
 npm i raspberrypi-liquid-crystal-simple
@@ -34,8 +34,24 @@ lcd.blink = true;
 lcd.cursor = true;
 lcd.display = true;
 ```
+
+## Custom characters
+You can create up to 8 custom characters by providing a list of array of number representing your characters dots into the constructor call. Then use them by inserting LCD.getChar(charId) into any string.
+```
+const LCD = require('raspberrypi-liquid-crystal-simple');
+const customChars = [
+  [0x0,0xa,0x1f,0x1f,0xe,0x4,0x0],  // Heart character
+  [0x0,0x0,0xa,0x0,0x11,0xe,0x0],  // Smiley character
+];
+const lcd = new LCD(1, 0x3f, 16, 2, customChars);
+lcd.init();
+lcd.setLine(0, 'Hello' + LCD.getChar(0) + 'World' + LCD.getChar(1))
+```
+You can use this online tool to easily generate chars (copy and paste the hexadecimals value)
+http://www.quinapalus.com/hd44780udg.html
+
 ## API
-- **constructor ( bus : int, address : int, width : int, height : int )**
+- **constructor ( bus : int, address : int, width : int, height : int, customChars : array of int )**
 ### Properties
 - **address** [read-only] : int - The i2c address declared when instantiating the LCD object.
 - **busNumber** [read-only] : int - The bus number declared when instantiating the LCD object.
@@ -52,8 +68,9 @@ lcd.display = true;
 - **clear ()** : void - Removes any content on the screen.
 - **getLine ( lineIndex : int )** : string - Returns the text content of the specified line.
 - **init ()** : void - Initializes the lcd so it starts displaying (asynchronous, listen on the "ready" event on the lcd).
-- **initSync ()** : void - Initializes the lcd so it starts displaying (synchronous).
+- **initSync ()** : void - Synchronous version of init() method.
 - **setLine ( lineIndex : int, text : string )** : void - Sets the text content of the specified line.
+- **getChar ( id : int )** - Returns a custom character given on the constructor at specified id (0 to 7).
 ### Events
 - **ready** () - Fires when the lcd is initialized and ready to display.
 - **error** (error) - Fires when an error is encountered.

@@ -2,7 +2,7 @@ const _LCD = require('raspberrypi-liquid-crystal');
 const Emitter = require('events');
 
 class LCD extends Emitter {
-  constructor(bus, address, width, height) {
+  constructor(bus, address, width, height, customChars = []) {
     super();
     this._lcd = new _LCD(bus, address, width, height);
     this._height = height;
@@ -15,6 +15,7 @@ class LCD extends Emitter {
     this._blinking = false;
     this._display = true;
     this._cursor = false;
+    this._chars = customChars.concat();
     for (let i = 0; i < height; i += 1) {
       this._lines.push('');
       this._lastLines.push('');
@@ -25,6 +26,9 @@ class LCD extends Emitter {
     try {
       this._lcd.beginSync();
       this._lcd.clearSync();
+      for (let i = 0; i < this._chars.length && i < 8; i += 1) {
+        this._lcd.createCharSync(i, this._chars[i]);
+      }
     } catch (e) {
       this.emit('error', e);
       return;
@@ -37,6 +41,9 @@ class LCD extends Emitter {
     try {
       await this._lcd.begin();
       await this._lcd.clear();
+      for (let i = 0; i < this._chars.length && i < 8; i += 1) {
+        await this._lcd.createChar(i, this._chars[i]);
+      }
     } catch (e) {
       this.emit('error', e);
       return;
