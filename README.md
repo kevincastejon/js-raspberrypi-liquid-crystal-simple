@@ -35,6 +35,13 @@ lcd.cursor = true;
 lcd.display = true;
 ```
 
+## Text alignment
+You can specify an alignment for each LCD line. LEFT is default.
+```
+lcd.setAlignment(0, LCD.CENTER);    // Will center the first line
+lcd.setAlignment(1, LCD.RIGHT);     // Will align right the second line
+```
+
 ## Custom characters
 You can create up to 8 custom characters by providing a list of array of number representing your characters dots into the constructor last optional argument. Then use them by inserting LCD.getChar(charId) into any string.
 ```
@@ -52,6 +59,10 @@ http://www.quinapalus.com/hd44780udg.html
 
 ## API
 - **constructor ( bus : int, address : int, cols : int, rows : int [, customChars : [][]int] )**
+### Constants
+- **LEFT** static [read-only] : string - Shortcut for "left" value, use it along with setAlignement() method.
+- **RIGHT** static [read-only] : string - Shortcut for "right" value, use it along with setAlignement() method.
+- **CENTER** static [read-only] : string - Shortcut for "center" value, use it along with setAlignement() method.
 ### Properties
 - **address** [read-only] : int - The i2c address declared when instantiating the LCD object.
 - **busNumber** [read-only] : int - The bus number declared when instantiating the LCD object.
@@ -64,9 +75,11 @@ http://www.quinapalus.com/hd44780udg.html
 - **ready** [read-only] : boolean - True if the LCD has been initialized, false if not.
 ### Methods
 - **clear ()** : void - Removes any content on the screen.
+- **getAlignment ( lineIndex : int )** : string - Returns the text alignment on the specified line.
 - **getLine ( lineIndex : int )** : string - Returns the text content of the specified line.
 - **init ()** : void - Initializes the lcd so it starts displaying (asynchronous, listen on the "ready" event on the lcd).
 - **initSync ()** : void - Synchronous version of init() method.
+- **setAlignement ( lineIndex : int, alignment : string )** : void - Sets the text alignment on the specified line. Use the static constants LCD.LEFT, LCD.RIGHT and LCD.CENTER or directly the strings "left", "right" and "center"
 - **setLine ( lineIndex : int, text : string )** : void - Sets the text content of the specified line.
 - **getChar ( id : int )** - Returns a custom character given on the constructor at specified id (0 to 7).
 ### Events

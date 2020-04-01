@@ -9,8 +9,8 @@ class LCD extends Emitter {
     this._cols = cols;
     this._lines = [];
     this._lastLines = [];
-    this._lastAlignements = [];
-    this._alignements = [];
+    this._lastAlignments = [];
+    this._alignments = [];
     this._lastBlinking = false;
     this._lastCursor = false;
     this._lastDisplay = true;
@@ -21,8 +21,8 @@ class LCD extends Emitter {
     for (let i = 0; i < rows; i += 1) {
       this._lines.push('');
       this._lastLines.push('');
-      this._alignements.push(LCD.LEFT);
-      this._lastAlignements.push(LCD.LEFT);
+      this._alignments.push(LCD.LEFT);
+      this._lastAlignments.push(LCD.LEFT);
     }
   }
 
@@ -147,20 +147,20 @@ class LCD extends Emitter {
     return (this._lines[line]);
   }
 
-  setAlignement(line, alignement) {
+  setAlignment(line, alignment) {
     if (line < 0 || line > this._rows - 1) {
       this.emit('error', new Error('line index is out of bounds'));
     } else {
-      this._alignements[line] = alignement;
+      this._alignments[line] = alignment;
     }
   }
 
-  getAlignement(line) {
+  getAlignment(line) {
     if (line < 0 || line > this._rows - 1) {
       this.emit('error', new Error('line index is out of bounds'));
       return null;
     }
-    return (this._alignements[line]);
+    return (this._alignments[line]);
   }
 
   static getChar(charId) {
@@ -176,9 +176,9 @@ class LCD extends Emitter {
     return false;
   }
 
-  _checkNewAlignements() {
-    for (let i = 0; i < this._alignements.length; i += 1) {
-      if (this._alignements[i] !== this._lastAlignements[i]) {
+  _checkNewAlignments() {
+    for (let i = 0; i < this._alignments.length; i += 1) {
+      if (this._alignments[i] !== this._lastAlignments[i]) {
         return true;
       }
     }
@@ -215,9 +215,9 @@ class LCD extends Emitter {
     }
   }
 
-  _updateLastAlignements() {
-    for (let i = 0; i < this._alignements.length; i += 1) {
-      this._lastAlignements[i] = this._alignements[i];
+  _updateLastAlignments() {
+    for (let i = 0; i < this._alignments.length; i += 1) {
+      this._lastAlignments[i] = this._alignments[i];
     }
   }
 
@@ -247,21 +247,21 @@ class LCD extends Emitter {
         }
         this._updateCursor();
       }
-      if (this._checkNewLines() || this._checkNewAlignements()) {
+      if (this._checkNewLines() || this._checkNewAlignments()) {
         await this._lcd.clear();
         for (let i = 0; i < this._lines.length; i += 1) {
           let message = this._lines[i];
-          if (this._alignements[i] === LCD.LEFT) {
+          if (this._alignments[i] === LCD.LEFT) {
             message = message.length > this._cols ? message.substr(0, this._cols) : message;
-          } else if (this._alignements[i] === LCD.CENTER) {
+          } else if (this._alignments[i] === LCD.CENTER) {
             message = message.length > this._cols ? message.substr(0, this._cols) : Array(parseInt((this._cols - message.length) / 2, 10)).fill(' ').join('').concat(message);
-          } else if (this._alignements[i] === LCD.RIGHT) {
+          } else if (this._alignments[i] === LCD.RIGHT) {
             message = message.length > this._cols ? message.substr(0, this._cols) : Array(this._cols - message.length).fill(' ').join('').concat(message);
           }
           await this._lcd.printLine(i, message);
         }
         this._updateLastLines();
-        this._updateLastAlignements();
+        this._updateLastAlignments();
       }
     } catch (e) {
       this.emit('error', e);
