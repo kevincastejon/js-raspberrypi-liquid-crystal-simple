@@ -2,11 +2,11 @@ const _LCD = require('raspberrypi-liquid-crystal');
 const Emitter = require('events');
 
 class LCD extends Emitter {
-  constructor(bus, address, width, height, customChars = []) {
+  constructor(bus, address, cols, rows, customChars = []) {
     super();
-    this._lcd = new _LCD(bus, address, width, height);
-    this._height = height;
-    this._width = width;
+    this._lcd = new _LCD(bus, address, cols, rows);
+    this._rows = rows;
+    this._cols = cols;
     this._lines = [];
     this._lastLines = [];
     this._lastBlinking = false;
@@ -16,7 +16,7 @@ class LCD extends Emitter {
     this._display = true;
     this._cursor = false;
     this._chars = customChars.map((e) => e.concat());
-    for (let i = 0; i < height; i += 1) {
+    for (let i = 0; i < rows; i += 1) {
       this._lines.push('');
       this._lastLines.push('');
     }
@@ -72,14 +72,6 @@ class LCD extends Emitter {
     return this._lcd._began;
   }
 
-  get height() {
-    return (this._lcd._height);
-  }
-
-  get width() {
-    return (this._lcd._width);
-  }
-
   get blink() {
     return this._blinking;
   }
@@ -113,7 +105,7 @@ class LCD extends Emitter {
         break;
       } else {
         const str = String(newLines[i]);
-        this._lines[i] = str.substr(0, this._width);
+        this._lines[i] = str.substr(0, this._cols);
       }
     }
   }
@@ -129,15 +121,15 @@ class LCD extends Emitter {
   }
 
   setLine(line, message) {
-    if (line < 0 || line > this._height - 1) {
+    if (line < 0 || line > this._rows - 1) {
       throw new Error('line index is out of bounds');
     } else {
-      this._lines[line] = message.length > this._width ? message.substr(0, this._width) : message.concat([].fill('', 0, this._width - message.length).join(''));
+      this._lines[line] = message.length > this._cols ? message.substr(0, this._cols) : message.concat([].fill('', 0, this._cols - message.length).join(''));
     }
   }
 
   getLine(line) {
-    if (line < 0 || line > this._height - 1) {
+    if (line < 0 || line > this._rows - 1) {
       throw new Error('line index is out of bounds');
     } else {
       return (this._lines[line]);

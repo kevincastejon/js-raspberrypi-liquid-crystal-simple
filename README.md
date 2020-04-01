@@ -36,7 +36,7 @@ lcd.display = true;
 ```
 
 ## Custom characters
-You can create up to 8 custom characters by providing a list of array of number representing your characters dots into the constructor call. Then use them by inserting LCD.getChar(charId) into any string.
+You can create up to 8 custom characters by providing a list of array of number representing your characters dots into the constructor last optional argument. Then use them by inserting LCD.getChar(charId) into any string.
 ```
 const LCD = require('raspberrypi-liquid-crystal-simple');
 const customChars = [
@@ -51,7 +51,7 @@ You can use this online tool to easily generate chars (copy and paste the hexade
 http://www.quinapalus.com/hd44780udg.html
 
 ## API
-- **constructor ( bus : int, address : int, width : int, height : int, customChars : array of int )**
+- **constructor ( bus : int, address : int, cols : int, rows : int [, customChars : [][]int] )**
 ### Properties
 - **address** [read-only] : int - The i2c address declared when instantiating the LCD object.
 - **busNumber** [read-only] : int - The bus number declared when instantiating the LCD object.
@@ -59,11 +59,9 @@ http://www.quinapalus.com/hd44780udg.html
 - **cols** [read-only] : int - The number of characters width declared when instantiating the LCD object.
 - **cursor** : boolean - If true it will display a underscore line at the cursor position.
 - **display** : boolean - If false it will turn off the lcd (backlight). Turns on if true.
-- **height** [read-only] : int - The number of lines.
-- **lines** : array of strings - The lcd lines text content.
+- **lines** : []string - The lcd lines text content. Don't modify directly the array content
 - **rows** [read-only] : int - The number of lines declared when instantiating the LCD object.
 - **ready** [read-only] : boolean - True if the LCD has been initialized, false if not.
-- **width** [read-only] : int - The number of characters on a line.
 ### Methods
 - **clear ()** : void - Removes any content on the screen.
 - **getLine ( lineIndex : int )** : string - Returns the text content of the specified line.
