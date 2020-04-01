@@ -100,13 +100,8 @@ class LCD extends Emitter {
   }
 
   set lines(newLines) {
-    for (let i = 0; i < this._lines.length; i += 1) {
-      if (newLines.length - 1 < i) {
-        break;
-      } else {
-        const str = String(newLines[i]);
-        this._lines[i] = str.substr(0, this._cols);
-      }
+    for (let i = 0; i < newLines.length; i += 1) {
+      this.setLine(i, newLines[i]);
     }
   }
 
@@ -120,7 +115,8 @@ class LCD extends Emitter {
     }
   }
 
-  setLine(line, message) {
+  setLine(line, _message) {
+    const message = String(_message);
     if (line < 0 || line > this._rows - 1) {
       this.emit('error', new Error('line index is out of bounds'));
     } else {
