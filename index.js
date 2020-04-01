@@ -120,7 +120,7 @@ class LCD extends Emitter {
     if (line < 0 || line > this._rows - 1) {
       this.emit('error', new Error('line index is out of bounds'));
     } else {
-      this._lines[line] = message.length > this._cols ? message.substr(0, this._cols) : message.concat(Array(this._cols - message.length - 1).fill(' ').join(''));
+      this._lines[line] = message.length > this._cols ? message.substr(0, this._cols) : message.concat(Array(this._cols - (message.length - 1)).fill(' ').join(''));
     }
   }
 
