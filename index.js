@@ -15,7 +15,7 @@ class LCD extends Emitter {
     this._blinking = false;
     this._display = true;
     this._cursor = false;
-    this._chars = customChars.concat();
+    this._chars = customChars.map((e) => e.concat());
     for (let i = 0; i < height; i += 1) {
       this._lines.push('');
       this._lastLines.push('');
