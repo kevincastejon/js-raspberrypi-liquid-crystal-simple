@@ -30,5 +30,7 @@ lcd.on('ready', async () => {
   lcd.display = true;
   await wait(1000);
   lcd.setLine(1, `world!!!${LCD.getChar(0)}`);
+  lcd.setAlignement(0, LCD.CENTER);
+  lcd.setAlignement(1, LCD.RIGHT);
 });
 lcd.init();
