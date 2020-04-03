@@ -81,7 +81,7 @@ http://www.quinapalus.com/hd44780udg.html
 - **initSync ()** : void - Synchronous version of init() method.
 - **setAlignement ( lineIndex : int, alignment : string )** : void - Sets the text alignment on the specified line. Use the static constants LCD.LEFT, LCD.RIGHT and LCD.CENTER or directly the strings "left", "right" and "center"
 - **setLine ( lineIndex : int, text : string )** : void - Sets the text content of the specified line.
-- **getChar ( id : int )** - Returns a custom character given on the constructor at specified id (0 to 7).
+- **getChar ( id : int )** static - Returns a custom character given on the constructor at specified id (0 to 7).
 ### Events
 - **ready** () - Fires when the lcd is initialized and ready to display.
 - **error** (error) - Fires when an error is encountered.
